@@ -6,18 +6,20 @@ const SearchBar = (props) => {
 
       <strong>Sort by:</strong>
       <label>
-        <input type="radio" value="Alphabetically" checked={props.Alpcheck} onChange={(e) => props.sortStock(e)}/>
+        <input type="radio" value="Alphabetically" checked={props.sorted === "Alphabetically"? true : false} 
+        onChange={(e) => props.sortStock(e.target.value)}/>
         Alphabetically
       </label>
       <label>
-        <input type="radio" value="Price" checked={props.PCheck} onChange={(e) => props.sortStock(e)}/>
+        <input type="radio" value="Price" checked={props.sorted === "Price"? true : false} 
+        onChange={(e) => props.sortStock(e.target.value)}/>
         Price
       </label>
       <br/>
 
       <label>
         <strong>Filter:</strong>
-        <select onChange={(e) => props.sortStock(e)}>
+        <select onChange={(e) => props.sortStock(e.target.value)}>
           <option value="All">All</option>
           <option value="Tech">Tech</option>
           <option value="Sportswear">Sportswear</option>

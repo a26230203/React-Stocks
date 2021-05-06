@@ -6,20 +6,23 @@ class App extends Component {
 
   state = {
     stocks: [],
-    Alpcheck: false,
-    PCheck: false
+    filter: 'All',
+    sorted: false
+    // portfolio: [],
   }
-
 
   componentDidMount() {
     fetch('http://localhost:3000/stocks') 
       .then(res=> res.json())
-        .then(stock => this.setState({
-          stocks: stock.map(stock=> {
-            return {...stock, onPortfolio:false}
-          })
-        }))
-  }
+      .then(stock => this.setState({
+        stocks: stock.map(stock=> {
+          return {...stock, onPortfolio:false}
+        })
+      }))
+      // .then(stock => this.setState({
+      //   stocks: stock
+      // }))
+    }
 
   addPortfolio = (stockObj) => {
       this.setState({
@@ -33,41 +36,80 @@ class App extends Component {
       })
   }
 
-  sortStock = (e) => {
-    if(e.target.value === "Alphabetically") {
-        this.setState({
-          stocks: [...this.state.stocks].sort((a, b) => a.name.localeCompare(b.name)),
-          Alpcheck: true
+  // addPortfolio = (stockObj) => {
+  //     this.setState({
+  //       portfolio: [...this.state.portfolio, stockObj]
+  //     })
+  // }
+
+
+
+  sellStock = (stockObj) => {
+
+    this.setState({
+        stocks: this.state.stocks.map(stock => {
+          if(stock === stockObj) {
+            return {...stock, onPortfolio:false}
+          }else {
+            return stock
+          }
         })
-    }else if (e.target.value === "Price") {
-      this.setState({
-        stocks: [...this.state.stocks].sort((a, b) => a.price - b.price),
-        PCheck: true
       })
-    }else if (e.target.value === "Tech") {
-      this.setState({
-        stocks: [...this.state.stocks].filter(stock => stock.type === e.target.value)
-      })
-    }else if (e.target.value === "Sportswear") {
-      this.setState({
-        stocks: [...this.state.stocks].filter(stock => stock.type === e.target.value)
-      })
-    }else if (e.target.value === "Finance") {
-      this.setState({
-        stocks: [...this.state.stocks].filter(stock => stock.type === e.target.value)
-      })
-    }
+
+    // let index = this.state.stocks.findIndex(stock => stock.id === stockObj.id)
+    // let resultArry = [...this.state.stocks]
+    // resultArry.splice(index, 1)
+
+    // this.setState({
+    //       stocks: resultArry
+    // })
+  }
+
+
+  sortStock = (e) => {
+
+    this.setState({
+      filter:  e
+    })
+
+
   }
 
   render() {
+      let displayStock = []   
+
+      if (this.state.filter === "All") {
+
+        displayStock = this.state.stocks
+  
+    } else if(this.state.filter === "Alphabetically") {
+        displayStock =  [...this.state.stocks].sort((a, b) => a.name.localeCompare(b.name))
+    }else if (this.state.filter === "Price") {
+      displayStock = [...this.state.stocks].sort((a, b) => a.price - b.price)
+    }else if (this.state.filter === "Tech") {
+
+      displayStock = [...this.state.stocks].filter(stock => stock.type === this.state.filter)
+
+    }else if (this.state.filter === "Sportswear") {
+
+      displayStock = [...this.state.stocks].filter(stock => stock.type === this.state.filter)
+
+    }else if (this.state.filter === "Finance") {
+
+      displayStock = [...this.state.stocks].filter(stock => stock.type === this.state.filter)
+
+    }
+
+
+
     let portfolioStock = this.state.stocks.filter(stock => stock.onPortfolio === true)
 
     return (
       <div>
         <Header/>
-        <MainContainer stock={this.state.stocks} addPortfolio={this.addPortfolio} 
-        portfolioStock={portfolioStock} sortStock={this.sortStock} Alpcheck={this.state.Alpcheck}
-        PCheck={this.state.PCheck} />
+        <MainContainer stock={displayStock} addPortfolio={this.addPortfolio}  
+        portfolioStock={/*this.state.portfolio*/  portfolioStock } sortStock={this.sortStock} 
+        sorted={this.state.sorted} sellStock={this.sellStock}/>
       </div>
     );
   }

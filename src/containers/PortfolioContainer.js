@@ -10,7 +10,7 @@ class PortfolioContainer extends Component {
           {
             //render your portfolio stocks here
             this.props.portfolioStock.map( (stock, index) => {
-              return <Stock key={index} stock={stock} />
+              return <Stock key={index} stock={stock} sellStock={this.props.sellStock}/>
             })
           }
       </div>
